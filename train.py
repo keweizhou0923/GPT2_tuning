@@ -37,6 +37,9 @@ parser.add_argument('--sample_num', metavar='N', type=int, default=1, help='Gene
 parser.add_argument('--save_every', metavar='N', type=int, default=1000, help='Write a checkpoint every N steps')
 
 
+# parser.add_argument('--sampledataset', metavar='PATH', type=str, required=True, help='Input file, directory, or glob pattern (utf-8 text, or preencoded .npz files).')
+test_sample = 'One of the best phones this year. For me the top phones of the year (currently, June 2012) would go to the HTX One x, and this one right here. Featuring a 4 core processor it is extremely fast, and it also comes with Androids 4 series operating system which is very smooth and nice to use. Overall the phone is great, and every aspect so far has been great. Camera, speed, size, screen, feel, look, all super. Great job samsung!P.S. Love playing emulator games on this thing, currently playing final fantasy 7 with a bluetooth controller. Just goes to show the speed of this thing when it can emulate PS1 games without lag or delay.'
+
 def maketree(path):
     try:
         os.makedirs(path)
@@ -54,7 +57,7 @@ def main():
     if args.sample_length > hparams.n_ctx:
         raise ValueError(
             "Can't get samples longer than window size: %s" % hparams.n_ctx)
-
+	
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     with tf.Session(config=config) as sess:
@@ -113,10 +116,12 @@ def main():
 
         print('Loading dataset...')
         chunks = load_dataset(enc, args.dataset, args.combine)
+# 	    sample_chunks = load_dataset(enc, args.sampledataset, args.combine)
         data_sampler = Sampler(chunks)
         print('dataset has', data_sampler.total_size, 'tokens')
         print('Training...')
-
+        token_test = np.stack(enc.encode("One of the best phones this year.. For me the top phones of the year"))
+        print(test_sample)
         counter = 1
         counter_path = os.path.join(CHECKPOINT_DIR, args.run_name, 'counter')
         if os.path.exists(counter_path):
@@ -139,7 +144,7 @@ def main():
                 fp.write(str(counter) + '\n')
 
         def generate_samples():
-            context_tokens = data_sampler.sample(1)
+            context_tokens = token_test
             all_text = []
             index = 0
             while index < args.sample_num:
@@ -148,11 +153,14 @@ def main():
                     feed_dict={context: args.batch_size * [context_tokens]})
                 for i in range(min(args.sample_num - index, args.batch_size)):
                     text = enc.decode(out[i])
-                    text = '======== SAMPLE {} ========\n{}\n'.format(
+                    text = '================ Generated version {} ================\n{}\n'.format(
                         index + 1, text)
                     all_text.append(text)
                     index += 1
+			
+            print("start sentense :" + enc.decode(token_test ))
             print(text)
+            
             maketree(os.path.join(SAMPLE_DIR, args.run_name))
             with open(
                     os.path.join(SAMPLE_DIR, args.run_name,
