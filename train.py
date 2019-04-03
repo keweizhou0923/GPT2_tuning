@@ -38,8 +38,7 @@ parser.add_argument('--save_every', metavar='N', type=int, default=1000, help='W
 
 
 # parser.add_argument('--sampledataset', metavar='PATH', type=str, required=True, help='Input file, directory, or glob pattern (utf-8 text, or preencoded .npz files).')
-test_sample = 'One of the best phones this year. For me the top phones of the year (currently, June 2012) would go to the HTX One x, and this one right here. Featuring a 4 core processor it is extremely fast, and it also comes with Androids 4 series operating system which is very smooth and nice to use. Overall the phone is great, and every aspect so far has been great. Camera, speed, size, screen, feel, look, all super. Great job samsung!P.S. Love playing emulator games on this thing, currently playing final fantasy 7 with a bluetooth controller. Just goes to show the speed of this thing when it can emulate PS1 games without lag or delay.'
-
+test_sample = "Great Android Phone. This is a very nice phone. The screen is easy to read and the phone performs flawlessly. My only negative is the lack for a memory card slot. I got the 16gb model so the lack of a memory card should not be a problem."
 def maketree(path):
     try:
         os.makedirs(path)
@@ -120,7 +119,7 @@ def main():
         data_sampler = Sampler(chunks)
         print('dataset has', data_sampler.total_size, 'tokens')
         print('Training...')
-        token_test = np.stack(enc.encode("One of the best phones this year. For me the top phones of the year (currently, June 2012) would go to the HTX One x"))
+        token_test = np.stack(enc.encode("Great Android Phone. This is a very nice phone. The screen is easy to read and the phone performs flawlessly."))
         print(test_sample)
         counter = 1
         counter_path = os.path.join(CHECKPOINT_DIR, args.run_name, 'counter')
@@ -171,10 +170,11 @@ def main():
             return [data_sampler.sample(1024) for _ in range(args.batch_size)]
 
         avg_loss = (0.0, 0.0)
-        start_time = time.time()
+        
 
         try:
             while True:
+                start_time = time.time()
                 if counter % args.save_every == 0:
                     save()
                 if counter % args.sample_every == 0:
