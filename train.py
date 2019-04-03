@@ -120,7 +120,7 @@ def main():
         data_sampler = Sampler(chunks)
         print('dataset has', data_sampler.total_size, 'tokens')
         print('Training...')
-        token_test = np.stack(enc.encode("One of the best phones this year.. For me the top phones of the year"))
+        token_test = np.stack(enc.encode("One of the best phones this year. For me the top phones of the year (currently, June 2012) would go to the HTX One x"))
         print(test_sample)
         counter = 1
         counter_path = os.path.join(CHECKPOINT_DIR, args.run_name, 'counter')
