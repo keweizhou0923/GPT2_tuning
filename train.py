@@ -41,10 +41,9 @@ parser.add_argument('--sampledataset', metavar='PATH', type=str, required=True, 
 # test_sample = 'One of the best phones this year. For me the top phones of the year (currently, June 2012) would go to the HTX One x, and this one right here. Featuring a 4 core processor it is extremely fast, and it also comes with Androids 4 series operating system which is very smooth and nice to use. Overall the phone is great, and every aspect so far has been great. Camera, speed, size, screen, feel, look, all super. Great job samsung!P.S. Love playing emulator games on this thing, currently playing final fantasy 7 with a bluetooth controller. Just goes to show the speed of this thing when it can emulate PS1 games without lag or delay.'
 def test_sampleset_gen(file):
     with open(file, "r") as ins:
-        out_txt = []
-        for line in ins:
-            out_txt.append(line)
-    return(out_txt)
+        out_text = ins.readlines()
+    out_text = [x.strip() for x in out_text ] 
+    return(out_text)
         
 def maketree(path):
     try:
@@ -224,6 +223,7 @@ def main():
                         time=time.time() - start_time,
                         loss=v_loss,
                         avg=avg_loss[0] / avg_loss[1]))
+                start_time = time.time()
 
                 counter += 1
         except KeyboardInterrupt:
