@@ -171,9 +171,10 @@ def main():
                         index + 1, text)
                     all_text.append("\n\n"+text)
                     index += 1
-                        
+                print(text)     
+                       
 #             print("start sentense :" + enc.decode(token_test ))
-            print(text)
+            
             
             maketree(os.path.join(SAMPLE_DIR, args.run_name))
             with open(
